@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Agen PPOB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: #f5f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .phone-container {
+            width: 100%;
+            max-width: 412px;
+            background-color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        /* Top Status Bar & Navigation */
+        .status-bar-mock {
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: #000;
+        }
+        .status-icons {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .nav-tabs {
+            display: flex;
+            border-bottom: 1px solid #eef0f2;
+            padding: 10px 0;
+        }
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #a0a5ba;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-tab.active {
+            color: #0d47a1;
+        }
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 35%;
+            width: 30%;
+            height: 3px;
+            background-color: #0052cc;
+            border-radius: 2px;
+        }
+        .nav-tab i {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 2px;
+            color: #555;
+        }
+        .nav-tab.active i {
+            color: #0052cc;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 12px 14px;
+            flex: 1;
+        }
+
+        /* User Balance Card */
+        .user-card {
+            background: #ffffff;
+            border: 1px solid #eef0f2;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 12px;
+        }
+        .balance-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .wallet-icon {
+            width: 34px;
+            height: 34px;
+            background-color: #e6f0fa;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #d32f2f;
+            font-size: 18px;
+        }
+        .balance-info .amount {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1a1a1a;
+        }
+        .balance-info .action-text {
+            font-size: 11px;
+            color: #d32f2f;
+            font-weight: bold;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+        .points-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 1px solid #eee;
+            padding-left: 16px;
+        }
+        .points-circle {
+            width: 28px;
+            height: 28px;
+            background-color: #f0f2f5;
+            border: 2px solid #b0bec5;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #455a64;
+            position: relative;
+        }
+        .points-circle::after {
+            content: '3';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #78909c;
+            color: white;
+            font-size: 8px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .points-info .pts {
+            font-size: 15px;
+            font-weight: bold;
+            color: #1a1a1a;
+            line-height: 1.1;
+        }
+        .points-info .tier {
+            font-size: 11px;
+            color: #78909c;
+        }
+
+        /* Top Action Rows */
+        .top-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .action-icon-wrapper {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background-color: #f7f9fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            margin-bottom: 6px;
+            border: 1px solid #eef0f2;
+            position: relative;
+        }
+        .action-btn span {
+            font-size: 11px;
+            color: #4a4a4a;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+        .dot-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 7px;
+            height: 7px;
+            background-color: #d32f2f;
+            border-radius: 50%;
+        }
+
+        /* Warning Banner */
+        .warning-banner {
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #1b5e20;
+            font-weight: bold;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            row-gap: 16px;
+            column-gap: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .feature-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            margin-bottom: 6px;
+            background-color: #fff;
+        }
+        .feature-item span {
+            font-size: 11px;
+            color: #333;
+            font-weight: 500;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+        .badge-new {
+            position: absolute;
+            top: -4px;
+            right: 4px;
+            background-color: #e91e63;
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 1px 5px;
+            border-radius: 6px;
+            z-index: 2;
+        }
+        .badge-cashback {
+            position: absolute;
+            top: -4px;
+            right: 0px;
+            background-color: #0d47a1;
+            color: white;
+            font-size: 8px;
+            font-weight: bold;
+            padding: 1px 4px;
+            border-radius: 6px;
+            z-index: 2;
+            line-height: 1;
+            text-align: center;
+        }
+
+        /* Special icons customized to match colored styles */
+        .ic-edc { background: #e3f2fd; color: #1565c0; }
+        .ic-soundbox { background: #fce4ec; color: #c2185b; }
+        .ic-kirim { background: #e0f2f1; color: #00796b; }
+        .ic-qris { background: #e8eaf6; color: #283593; }
+        .ic-token { background: #fff8e1; color: #f57f17; }
+        .ic-data { background: #e1f5fe; color: #0288d1; }
+        .ic-pulsa { background: #fefeaf; color: #d42f2f; }
+        .ic-digital { background: #ede7f6; color: #5e35b1; }
+        .ic-game { background: #e0f7fa; color: #00838f; }
+        .ic-kredit { background: #efebe9; color: #4e342e; }
+        .ic-pln { background: #fff3e0; color: #ef6c00; }
+        .ic-pdam { background: #e3f2fd; color: #0277bd; }
+        .ic-pendidikan { background: #e8eaf6; color: #1a237e; }
+        .ic-telkom { background: #ffebee; color: #c62828; }
+        .ic-bpjs { background: #e0f2f1; color: #00695c; }
+        .ic-semua { background: #f5f5f5; color: #616161; }
+
+        /* Banner Section */
+        .promo-container {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .side-banner {
+            width: 25%;
+            background-color: #2962ff;
+            color: white;
+            border-radius: 12px;
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+        }
+        .side-banner i {
+            align-self: flex-end;
+            margin-top: auto;
+        }
+        .main-banner {
+            width: 75%;
+            background: linear-gradient(135deg, #4a0e7d 0%, #7b1fa2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .banner-text h4 {
+            font-size: 10px;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-bottom: 2px;
+        }
+        .banner-text .prize {
+            font-size: 20px;
+            font-weight: 900;
+            color: #fff;
+        }
+        .banner-text .subtext {
+            font-size: 9px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+        .banner-text .voucher {
+            background-color: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .banner-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+        }
+        .avatar-img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background-color: #ffca28;
+            border: 2px solid #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+        }
+        .extra-badge {
+            background-color: #d32f2f;
+            color: white;
+            font-size: 8px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-top: -6px;
+            font-weight: bold;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* MODAL POPUP ALERT */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-box {
+            width: 85%;
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-box {
+            transform: scale(1);
+        }
+        .modal-icon {
+            font-size: 44px;
+            color: #d32f2f;
+            margin-bottom: 12px;
+        }
+        .modal-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        .modal-message {
+            font-size: 13px;
+            color: #555555;
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+        .modal-btn {
+            width: 100%;
+            background-color: #0052cc;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .modal-btn:hover {
+            background-color: #0043b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    
+    <!-- MODAL NOTIFIKASI OTOMATIS -->
+    <div class="modal-overlay" id="alertModal">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="modal-title">Hati-hati Modus Penipuan!</div>
+            <div class="modal-message">
+                Kami tidak pernah meminta OTP, PIN, atau kata sandi Anda. Jangan berikan data rahasia ini kepada siapa pun, termasuk pihak yang mengaku sebagai Customer Service. Tetap waspada dan amankan akun Anda!
+            </div>
+            <button class="modal-btn" onclick="closeAlert()">Saya Mengerti</button>
+        </div>
+    </div>
+
+    <!-- Status Bar Mock -->
+    <div class="status-bar-mock">
+        <div>20:31</div>
+        <div class="status-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <div class="nav-tab active">
+            <i class="fas fa-home"></i>
+            Beranda
+        </div>
+        <div class="nav-tab">
+            <i class="fas fa-exchange-alt"></i>
+            Transaksi
+        </div>
+        <div class="nav-tab">
+            <i class="fas fa-question-circle"></i>
+            Bantuan
+        </div>
+        <div class="nav-tab">
+            <i class="fas fa-user"></i>
+            Akun
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="content">
+        
+        <!-- User Info Card -->
+        <div class="user-card">
+            <div class="balance-section">
+                <div class="wallet-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="balance-info">
+                    <div class="amount">Rp118.000.000</div>
+                    <div class="action-text">Isi saldo di sini, yuk!</div>
+                </div>
+            </div>
+            <div class="points-section">
+                <div class="points-circle">3</div>
+                <div class="points-info">
+                    <div class="pts">94</div>
+                    <div class="tier">Silver</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Action Icons -->
+        <div class="top-actions">
+            <div class="action-btn">
+                <div class="action-icon-wrapper">
+                    <i class="fas fa-gift" style="color: #2979ff;"></i>
+                    <div class="dot-badge"></div>
+                </div>
+                <span>Coba Gratis!</span>
+            </div>
+            <div class="action-btn">
+                <div class="action-icon-wrapper">
+                    <i class="fas fa-book" style="color: #651fff;"></i>
+                </div>
+                <span>Pembukuan &...</span>
+            </div>
+            <div class="action-btn">
+                <div class="action-icon-wrapper">
+                    <i class="fas fa-tags" style="color: #00e676;"></i>
+                    <div class="dot-badge"></div>
+                </div>
+                <span>Promo</span>
+            </div>
+            <div class="action-btn">
+                <div class="action-icon-wrapper">
+                    <i class="fas fa-bell" style="color: #ff1744;"></i>
+                    <div class="dot-badge"></div>
+                </div>
+                <span>Notifikasi</span>
+            </div>
+        </div>
+
+        <!-- Warning Dropdown Banner -->
+        <div class="warning-banner" onclick="showAlert()">
+            <i class="fas fa-shield-virus"></i>
+            <span>Hati-hati modus penipuan!</span>
+            <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: auto;"></i>
+        </div>
+
+        <!-- Core Feature Grid Matrix -->
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div class="badge-new">Baru</div>
+                <div class="feature-icon-box ic-edc"><i class="fas fa-calculator"></i></div>
+                <span>EDC</span>
+            </div>
+            <div class="feature-item">
+                <div class="badge-new">Baru</div>
+                <div class="feature-icon-box ic-soundbox"><i class="fas fa-volume-up"></i></div>
+                <span>Pre Order Soundbox</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-box ic-kirim"><i class="fas fa-paper-plane"></i></div>
+                <span>Kirim Uang</span>
+            </div>
+            <div class="feature-item">
+                <div class="badge-cashback">Cashback 10%</div>
+                <div class="feature-icon-box ic-qris"><i class="fas fa-qrcode"></i></div>
+                <span>Terima bayar QRIS</span>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon-box ic-token"><i class="fas fa-bolt"></i></div>
+                <span>Token Listrik</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-box ic-data"><i class="fas fa-wifi"></i></div>
+                <span>Paket Data</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-box ic-pulsa"><i class="fas fa-mobile-alt"></i></div>
+                <span>Pulsa</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-box ic-digital"><i class="fas fa-tablet-alt"></i></div>
+                <span>Top Up Digital</span>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon-box ic-game"><i class="fas fa-gamepad"></i></div>
+                <span>Top Up Game</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-box ic-kredit"><i class="fas fa-file-invoice-dollar"></i></div>
+                <span>Angsuran Kredit</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-box ic-pln"><i class="fas fa-lightbulb"></i></div>
+                <span>Tagihan Listrik PLN</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-box ic-pdam"><i class="fas fa-tint"></i></div>
+                <span>PDAM</span>
+            </div>
+
+            <div class="feature-item">
+                <div class="badge-new">Baru</div>
+                <div class="feature-icon-box ic-pendidikan"><i class="fas fa-graduation-cap"></i></div>
+                <span>Bayar Pendidikan</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-box ic-telkom"><i class="fas fa-phone-alt"></i></div>
+                <span>Telkom/ IndiHome</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-box ic-bpjs"><i class="fas fa-heartbeat"></i></div>
+                <span>BPJS Kesehatan</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-box ic-semua"><i class="fas fa-th-large"></i></div>
+                <span>Lihat Semua</span>
+            </div>
+        </div>
+
+        <!-- Banner Promosi Bawah -->
+        <div class="promo-container">
+            <div class="side-banner">
+                <div>Lihat program terbaru</div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="main-banner">
+                <div class="banner-text">
+                    <h4>Bayar Tagihan PGN Langsung Tambah Cuan</h4>
+                    <div class="prize">Rp 700*</div>
+                    <div class="subtext">per-transaksi</div>
+                    <div class="voucher">Kode voucher: KOMISIPGN</div>
+                </div>
+                <div class="banner-right">
+                    <div class="avatar-img">👨</div>
+                    <div class="extra-badge">Extra Untung s.d. Rp 2 Juta</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Memunculkan alert secara otomatis saat masuk web (halaman selesai dimuat)
+    window.addEventListener('DOMContentLoaded', (event) => {
+        setTimeout(showAlert, 300);
+    });
+
+    function showAlert() {
+        document.getElementById('alertModal').classList.add('show');
+    }
+
+    function closeAlert() {
+        document.getElementById('alertModal').classList.remove('show');
+    }
+</script>
+
+</body>
+</html>
